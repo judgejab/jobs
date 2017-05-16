@@ -2,19 +2,28 @@ import React, { Component } from 'react';
 import { View, Text, ActivityIndicator } from 'react-native';
 import { MapView } from 'expo';
 import { connect } from 'react-redux';
-import { Button } from 'react-native-elements';
+import { Button, Icon } from 'react-native-elements';
 
 import * as actions from '../actions';
 
 class MapScreen extends Component {
+  static navigationOptions = {
+    title: 'Map',
+    tabBar: {
+      icon: ({ tintColor }) => {
+        return <Icon name="my-location" size={30} color={tintColor}/>
+      }
+    }
+  }
+
   state = {
+    mapLoaded: false,
     region: {
       longitude: -122,
       latitude: 37,
       longitudeDelta: 0.04,
       latitudeDelta: 0.09
-    },
-    mapLoaded: false
+    }
   }
 
   componentDidMount() {
@@ -26,7 +35,9 @@ class MapScreen extends Component {
   }
 
   onButtonPress = () => {
-    this.props.fetchJobs(this.state.region);
+    this.props.fetchJobs(this.state.region, () => {
+      this.props.navigation.navigate('deck');
+    });
   }
 
   render() {
